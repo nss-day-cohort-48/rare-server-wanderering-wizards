@@ -90,3 +90,5 @@ CREATE TABLE "Categories" (
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+
+INSERT INTO Users VALUES (null, "wiz", "ard", "wizard@nss.com", "I'm a wizard", "wizboi37", "password", null, "7/26/21", 1)
