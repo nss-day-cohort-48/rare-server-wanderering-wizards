@@ -1,3 +1,6 @@
+
+---------------------------- INITIALIZE ----------------------------
+
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
