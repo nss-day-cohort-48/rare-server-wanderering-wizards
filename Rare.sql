@@ -1,3 +1,5 @@
+-- DELETE from Users WHERE first_name = "Bingbang"
+DROP TABLE Users
 
 ---------------------------- INITIALIZE ----------------------------
 

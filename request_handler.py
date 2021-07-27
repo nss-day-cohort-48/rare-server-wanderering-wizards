@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from login.request import login_auth
+from login.request import login_auth, register_user
 from models import Login
 
 
@@ -75,12 +75,15 @@ class HandleRequests(BaseHTTPRequestHandler):
 		(resource, _) = self.parse_url(
 			self.path)  # pylint: disable=unbalanced-tuple-unpacking
 
+		new_user = None
+
 		if resource == "login":
 			user_login = login_auth(post_body['email'], post_body['password'])
 			self.wfile.write(f"{user_login}".encode())
+
 		if resource == "register":
-			user_login = register_user(post_body['email'], post_body['password'])
-			self.wfile.write(f"{user_login}".encode())
+			new_user = register_user(post_body)
+			self.wfile.write(f"{new_user}".encode())
 		
 
 
