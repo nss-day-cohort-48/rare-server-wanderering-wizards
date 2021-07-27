@@ -1,7 +1,8 @@
 -- DELETE from Users WHERE first_name = "Bingbang"
-DROP TABLE Users
+
 
 ---------------------------- INITIALIZE ----------------------------
+
 
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
