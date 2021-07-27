@@ -88,9 +88,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_user = register_user(post_body)
             self.wfile.write(f"{new_user}".encode())
 
-            if resource == "categories":
-                new_category = create_category(post_body)
-                self.wfile.write(f"{new_category}".encode())
+        if resource == "categories":
+            new_category = create_category(post_body)
+            self.wfile.write(f"{new_category}".encode())
 
     def do_GET(self):
         self._set_headers(200)
@@ -112,8 +112,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_animals()}"
 
-                    if resource == "categories":
-                        response = f"{get_categories()}"
+            if resource == "categories":
+                response = f"{get_categories()}"
 
             if resource == "customers":
                 if id is not None:
