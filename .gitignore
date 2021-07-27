@@ -10,6 +10,7 @@ __pycache__/
 
 #SQL
 .sql
+.SQL
 
 # C extensions
 *.so
