@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from login.request import login_auth, register_user
+from categories import create_category, get_categories
 from models import Login
 from posts import get_posts_by_id, get_post_details
 
@@ -77,6 +78,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.path)  # pylint: disable=unbalanced-tuple-unpacking
 
         new_user = None
+        new_category = None
 
         if resource == "login":
             user_login = login_auth(post_body['email'], post_body['password'])
@@ -85,6 +87,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "register":
             new_user = register_user(post_body)
             self.wfile.write(f"{new_user}".encode())
+
+            if resource == "categories":
+                new_category = create_category(post_body)
+                self.wfile.write(f"{new_category}".encode())
 
     def do_GET(self):
         self._set_headers(200)
@@ -105,7 +111,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_post_details(id)}"
                 else:
                     response = f"{get_all_animals()}"
-            elif resource == "customers":
+
+                    if resource == "categories":
+                        response = f"{get_categories()}"
+
+            if resource == "customers":
                 if id is not None:
                     response = f"{get_single_customer(id)}"
                 else:
