@@ -2,7 +2,6 @@ from models import Post, User, Category
 import sqlite3
 import json
 
-
 def get_posts_by_id(id):
     # Open a connection to the database
     with sqlite3.connect("./Rare.db") as conn:
