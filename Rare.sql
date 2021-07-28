@@ -1,4 +1,4 @@
--- DELETE FROM Posts WHERE user_id = 2;
+DELETE FROM Users WHERE id = 3;
 -- DROP TABLE Users
 
 ---------------------------- INITIALIZE ----------------------------

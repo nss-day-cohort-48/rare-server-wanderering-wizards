@@ -91,7 +91,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "categories":
             new_category = create_category(post_body)
             self.wfile.write(f"{new_category}".encode())
-        if resource == "animals":
+        if resource == "posts":
             create_post(post_body)
 
     def do_GET(self):
