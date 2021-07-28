@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from posts.request import delete_post
 from login.request import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
@@ -117,7 +118,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
+<<<<<<< HEAD
+                    pass
+=======
                     response = f"{get_all_posts()}"
+>>>>>>> main
 
             if resource == "categories":
                 response = f"{get_categories()}"
@@ -127,9 +132,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "customers":
                 if id is not None:
-                    response = f"{get_single_customer(id)}"
+                    pass
                 else:
-                    response = f"{get_all_customers()}"
+                    pass
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
@@ -144,6 +149,20 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = f"{get_posts_by_id(value)}"
 
         self.wfile.write(response.encode())
+
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "posts":
+            delete_post(id)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
 
 def main():
