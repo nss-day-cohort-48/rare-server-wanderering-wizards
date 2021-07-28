@@ -4,6 +4,7 @@ from login.request import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
 from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
+from tags import get_tags, create_tag
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -93,6 +94,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(f"{new_category}".encode())
         if resource == "posts":
             create_post(post_body)
+		
+        if resource == "tags":
+            new_tag = create_tag(post_body)
+            self.wfile.write(f"{new_tag}".encode())
 
     def do_GET(self):
         self._set_headers(200)
@@ -116,6 +121,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "categories":
                 response = f"{get_categories()}"
+
+            if resource == "tags":
+            	response = f"{get_tags()}"
 
             if resource == "customers":
                 if id is not None:
