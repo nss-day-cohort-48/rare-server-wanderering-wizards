@@ -122,3 +122,12 @@ def get_post_details(id):
         post.user = user.__dict__
 
         return json.dumps(post.__dict__)
+
+def delete_post(id):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM posts
+        WHERE id = ?
+        """, (id, ))
