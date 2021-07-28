@@ -3,7 +3,7 @@ import json
 from login.request import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
-from posts import get_posts_by_id, get_post_details
+from posts import get_posts_by_id, get_post_details, get_all_posts
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -110,7 +110,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
-                    response = f"{get_all_animals()}"
+                    response = f"{get_all_posts()}"
 
             if resource == "categories":
                 response = f"{get_categories()}"
