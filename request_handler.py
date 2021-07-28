@@ -3,7 +3,7 @@ import json
 from login.request import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
-from posts import get_posts_by_id, get_post_details, get_all_posts
+from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -91,6 +91,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "categories":
             new_category = create_category(post_body)
             self.wfile.write(f"{new_category}".encode())
+        if resource == "animals":
+            create_post(post_body)
 
     def do_GET(self):
         self._set_headers(200)
