@@ -5,7 +5,7 @@ from login.request import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
 from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
-from tags import get_tags, create_tag
+from tags import get_tags, create_tag, delete_tag
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -118,11 +118,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
-<<<<<<< HEAD
-                    pass
-=======
                     response = f"{get_all_posts()}"
->>>>>>> main
 
             if resource == "categories":
                 response = f"{get_categories()}"
@@ -160,6 +156,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal from the list
         if resource == "posts":
             delete_post(id)
+        if resource == "tags":
+            delete_tag(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
