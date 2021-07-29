@@ -32,3 +32,11 @@ def get_categories():
             categories.append(category.__dict__)
 
     return json.dumps(categories)
+
+def delete_category(id):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE FROM categories
+        WHERE id = ?
+        """, (id, ))
