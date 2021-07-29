@@ -1,12 +1,13 @@
 from comments.request import get_all_comments, get_comments_by_post_id, create_comment
+from categories.request import delete_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from posts.request import delete_post
 from login.request import login_auth, register_user
-from categories import create_category, get_categories
+from categories import create_category, get_categories, delete_category
 from models import Login
-from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
-from tags import get_tags, create_tag
+from posts import get_posts_by_id, get_post_details, get_all_posts, create_post, update_post
+from tags import get_tags, create_tag, delete_tag
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -124,7 +125,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
-                    pass
                     response = f"{get_all_posts()}"
 
             if resource == "categories":
@@ -163,8 +163,33 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal from the list
         if resource == "posts":
             delete_post(id)
+        if resource == "tags":
+            delete_tag(id)
+        if resource == "categories":
+            delete_category(id)
 
         # Encode the new animal and send in response
+        self.wfile.write("".encode())
+
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        # Delete a single animal from the list
+        if resource == "posts":
+            success = update_post(id, post_body)
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
 
