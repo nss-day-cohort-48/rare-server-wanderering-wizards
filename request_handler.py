@@ -1,4 +1,4 @@
-from tags.request import update_tag
+from comments.request import get_all_comments, get_comments_by_post_id, create_comment
 from categories.request import delete_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
@@ -83,6 +83,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         new_user = None
         new_category = None
+        new_comment = None
 
         if resource == "login":
             user_login = login_auth(post_body['email'], post_body['password'])
@@ -97,10 +98,14 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(f"{new_category}".encode())
         if resource == "posts":
             create_post(post_body)
-		
+
         if resource == "tags":
             new_tag = create_tag(post_body)
             self.wfile.write(f"{new_tag}".encode())
+            
+        if resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(f"{new_comment}".encode())
 
     def do_GET(self):
         self._set_headers(200)
@@ -126,13 +131,13 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = f"{get_categories()}"
 
             if resource == "tags":
-            	response = f"{get_tags()}"
+                response = f"{get_tags()}"
 
-            if resource == "customers":
+            if resource == "comments":
                 if id is not None:
-                    pass
+                    response = f"{get_comments_by_post_id(id)}"
                 else:
-                    pass
+                    response = f"{get_all_comments()}"
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
