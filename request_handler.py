@@ -1,4 +1,4 @@
-from comments.request import get_all_comments, get_comments_by_post_id
+from comments.request import get_all_comments, get_comments_by_post_id, create_comment
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from posts.request import delete_post
@@ -82,6 +82,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         new_user = None
         new_category = None
+        new_comment = None
 
         if resource == "login":
             user_login = login_auth(post_body['email'], post_body['password'])
@@ -100,6 +101,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "tags":
             new_tag = create_tag(post_body)
             self.wfile.write(f"{new_tag}".encode())
+            
+        if resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(f"{new_comment}".encode())
 
     def do_GET(self):
         self._set_headers(200)
