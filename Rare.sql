@@ -99,6 +99,6 @@ DELETE FROM Users WHERE id = 3;
 INSERT INTO Users VALUES (null, "wiz", "ard", "wizard@nss.com", "I'm a wizard", "wizboi37", "password", null, "7/26/21", 1);
 INSERT INTO Posts VALUES (null, 1, 1, "Yooooo", "07/27/2021", "https://images.squarespace-cdn.com/content/v1/57263bf8f8baf385ff61bb09/1535668320137-NZQPOXCGLFT34I9E4Z1E/Screen+Shot+2018-08-30+at+6.17.10+PM.png", "This is a post", 1);
 
--- INSERT INTO Comments VALUES (null, 1, 1, "Yo, this post is FIRE")
+INSERT INTO Comments VALUES (null, 4, 4, "Yo, this post is more FIRE");
 
 INSERT INTO 'PostTags' VALUES (null, 4,4);

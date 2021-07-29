@@ -171,18 +171,12 @@ def get_post_details(id):
             u.password,
             u.profile_image_url,
             u.created_on,
-            u.active,
-            com.id as comment_id,
-            com.post_id,
-            com.author_id,
-            com.content as comment_content
+            u.active
         FROM posts p 
         JOIN Users u 
             ON u.id = p.user_id
         JOIN Categories c 
             ON c.id = p.category_id
-        JOIN Comments com
-            ON p.id = com.post_id
         WHERE p.id = ?
         """, (id, ))
 
