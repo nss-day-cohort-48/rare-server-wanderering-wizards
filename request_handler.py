@@ -1,10 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from posts.request import delete_post
-from login.request import login_auth, register_user
+from login import login_auth, register_user
 from categories import create_category, get_categories
 from models import Login
-from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
+from posts import get_posts_by_id, get_post_details, get_all_posts, create_post, delete_post
 from tags import get_tags, create_tag
 
 
@@ -118,11 +117,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
-<<<<<<< HEAD
-                    pass
-=======
                     response = f"{get_all_posts()}"
->>>>>>> main
 
             if resource == "categories":
                 response = f"{get_categories()}"

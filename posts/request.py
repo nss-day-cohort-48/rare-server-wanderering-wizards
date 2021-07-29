@@ -116,6 +116,25 @@ def get_all_posts():
             post.category = category.__dict__
             post.user = user.__dict__
 
+            db_cursor.execute("""
+                SELECT
+                    t.id,
+                    t.label
+                FROM Tags t
+                JOIN PostTags pt on t.id = pt.tag_id
+                JOIN Posts p on p.id = pt.post_id
+                WHERE p.id = ?
+            """,(post.id, ))
+
+            tag_rows = db_cursor.fetchall()
+
+            for tag_row in tag_rows:
+                tag = {
+                    'id': tag_row['id'],
+                    'label': tag_row['label']
+                }
+                post.tags.append(tag)
+
             posts.append(post.__dict__)
 
     return json.dumps(posts)
@@ -175,7 +194,26 @@ def get_post_details(id):
         post.category = category.__dict__
         post.user = user.__dict__
 
-        return json.dumps(post.__dict__)
+        db_cursor.execute("""
+                SELECT
+                    t.id,
+                    t.label
+                FROM Tags t
+                JOIN PostTags pt on t.id = pt.tag_id
+                JOIN Posts p on p.id = pt.post_id
+                WHERE p.id = ?
+            """,(post.id, ))
+
+        tag_rows = db_cursor.fetchall()
+
+        for tag_row in tag_rows:
+            tag = {
+                'id': tag_row['id'],
+                'label': tag_row['label']
+            }
+            post.tags.append(tag)
+
+    return json.dumps(post.__dict__)
 
 
 def delete_post(id):
@@ -201,6 +239,13 @@ def create_post(new_post):
 
         id = db_cursor.lastrowid
         new_post['id'] = id
+
+        for tag in new_post['tags']:
+            db_cursor.execute("""
+            INSERT INTO PostTags
+                (post_id, tag_id)
+            VALUES (?,?)
+            """, (new_post['id'], tag['id']))
 
     return json.dumps(new_post)
 
