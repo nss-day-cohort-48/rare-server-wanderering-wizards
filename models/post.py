@@ -12,3 +12,4 @@ class Post():
         self.user = None
         self.category = None
         self.tags = []
+        self.comments = []

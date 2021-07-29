@@ -1,6 +1,7 @@
-from models import Post, User, Category
+from models import Post, User, Category, Comment
 import sqlite3
 import json
+
 
 def get_posts_by_id(id):
     # Open a connection to the database
@@ -65,6 +66,7 @@ def get_posts_by_id(id):
     # Use `json` package to properly serialize list as JSON
     return json.dumps(posts)
 
+
 def get_all_posts():
     with sqlite3.connect("./Rare.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -96,6 +98,7 @@ def get_all_posts():
         ON c.id = p.category_id
         JOIN Users u 
         ON u.id = p.user_id
+        
         """)
 
         posts = []
@@ -168,12 +171,18 @@ def get_post_details(id):
             u.password,
             u.profile_image_url,
             u.created_on,
-            u.active
+            u.active,
+            com.id as comment_id,
+            com.post_id,
+            com.author_id,
+            com.content as comment_content
         FROM posts p 
         JOIN Users u 
             ON u.id = p.user_id
         JOIN Categories c 
             ON c.id = p.category_id
+        JOIN Comments com
+            ON p.id = com.post_id
         WHERE p.id = ?
         """, (id, ))
 
@@ -213,7 +222,34 @@ def get_post_details(id):
             }
             post.tags.append(tag)
 
+        db_cursor.execute("""
+            SELECT
+                com.id as comment_id,
+                com.post_id,
+                com.author_id,
+                com.content as comment_content
+            FROM Comments com
+            JOIN Posts pos
+                ON com.post_id = pos.id
+            WHERE pos.id = ?
+        """, ( post.id, ))
+
+        comment_rows = db_cursor.fetchall()
+
+        for comment_row in comment_rows:
+            comment = {
+                'id': comment_row['comment_id'],
+                'post_id': comment_row['post_id'],
+                'author_id': comment_row['author_id'],
+                'content': comment_row['comment_content']
+            }
+            post.comments.append(comment)
+
     return json.dumps(post.__dict__)
+
+# TODO Join comments on to postsDetail query
+        # JOIN Comments com
+        # ON p.id = com.post_id
 
 
 def delete_post(id):
@@ -223,6 +259,7 @@ def delete_post(id):
         DELETE FROM posts
         WHERE id = ?
         """, (id, ))
+
 
 def create_post(new_post):
     with sqlite3.connect("./Rare.db") as conn:
@@ -235,7 +272,7 @@ def create_post(new_post):
             ( ?, ?, ?, ?, ?, ?, ?);
         """, (new_post['user_id'], new_post['category_id'],
               new_post['title'], new_post['publication_date'],
-              new_post['image_url'],new_post['content'], new_post['approved'] ))
+              new_post['image_url'], new_post['content'], new_post['approved']))
 
         id = db_cursor.lastrowid
         new_post['id'] = id
@@ -249,3 +286,29 @@ def create_post(new_post):
 
     return json.dumps(new_post)
 
+
+def update_post(id, update_post):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Posts
+            SET
+                category_id = ?,
+                title = ?,
+                image_url = ?,
+                content = ?
+        WHERE id = ?
+        """, (update_post['category_id'], update_post['title'],
+              update_post['image_url'], update_post['content'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
