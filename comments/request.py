@@ -51,10 +51,22 @@ def get_comments_by_post_id(id):
             pos.publication_date,
             pos.image_url,
             pos.content as post_content,
-            pos.approved
+            pos.approved,
+            user.id,
+            user.first_name,
+            user.last_name,
+            user.email,
+            user.bio,
+            user.username,
+            user.password,
+            user.profile_image_url,
+            user.created_on,
+            user.active
         FROM Comments com
         JOIN Posts pos 
             ON pos.id = com.post_id
+        JOIN Users user
+            ON com.author_id = user.id
         WHERE pos.id = ?
         """, (id, ))
 

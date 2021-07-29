@@ -127,3 +127,35 @@ SELECT
     com.author_id,
     com.content as comment_content
 FROM Comments com
+
+DELETE FROM Comments WHERE id = 11
+
+SELECT 
+            com.id as comment_id,
+            com.post_id,
+            com.author_id,
+            com.content as comment_content,
+            pos.id,
+            pos.user_id,
+            pos.category_id,
+            pos.title,
+            pos.publication_date,
+            pos.image_url,
+            pos.content as post_content,
+            pos.approved,
+            user.id,
+            user.first_name,
+            user.last_name,
+            user.email,
+            user.bio,
+            user.username,
+            user.password,
+            user.profile_image_url,
+            user.created_on,
+            user.active
+        FROM Comments com
+        JOIN Posts pos 
+            ON pos.id = com.post_id
+        JOIN Users user
+            ON com.author_id = user.id
+        
