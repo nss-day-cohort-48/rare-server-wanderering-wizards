@@ -1,3 +1,4 @@
+from comments.request import get_all_comments, get_comments_by_post_id
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from posts.request import delete_post
@@ -95,7 +96,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(f"{new_category}".encode())
         if resource == "posts":
             create_post(post_body)
-		
+
         if resource == "tags":
             new_tag = create_tag(post_body)
             self.wfile.write(f"{new_tag}".encode())
@@ -118,23 +119,20 @@ class HandleRequests(BaseHTTPRequestHandler):
                 if id is not None:
                     response = f"{get_post_details(id)}"
                 else:
-<<<<<<< HEAD
                     pass
-=======
                     response = f"{get_all_posts()}"
->>>>>>> main
 
             if resource == "categories":
                 response = f"{get_categories()}"
 
             if resource == "tags":
-            	response = f"{get_tags()}"
+                response = f"{get_tags()}"
 
-            if resource == "customers":
+            if resource == "comments":
                 if id is not None:
-                    pass
+                    response = f"{get_comments_by_post_id(id)}"
                 else:
-                    pass
+                    response = f"{get_all_comments()}"
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
