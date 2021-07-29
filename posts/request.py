@@ -204,3 +204,29 @@ def create_post(new_post):
 
     return json.dumps(new_post)
 
+
+def update_post(id, update_post):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Posts
+            SET
+                category_id = ?,
+                title = ?,
+                image_url = ?,
+                content = ?
+        WHERE id = ?
+        """, (update_post['category_id'], update_post['title'],
+              update_post['image_url'], update_post['content'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
