@@ -33,6 +33,28 @@ def get_categories():
 
     return json.dumps(categories)
 
+def update_category(id, category_body):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE categories
+            SET
+                label = ?
+        WHERE id = ?
+        """, (category_body['label'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
+
 def delete_category(id):
     with sqlite3.connect("./Rare.db") as conn:
         db_cursor = conn.cursor()
