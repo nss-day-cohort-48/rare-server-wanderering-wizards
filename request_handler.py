@@ -1,8 +1,9 @@
+from categories.request import delete_category
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from posts.request import delete_post
 from login.request import login_auth, register_user
-from categories import create_category, get_categories
+from categories import create_category, get_categories, delete_category
 from models import Login
 from posts import get_posts_by_id, get_post_details, get_all_posts, create_post
 from tags import get_tags, create_tag, delete_tag
@@ -158,6 +159,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_post(id)
         if resource == "tags":
             delete_tag(id)
+        if resource == "categories":
+            delete_category(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
