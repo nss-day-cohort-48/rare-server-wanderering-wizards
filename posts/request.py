@@ -119,6 +119,25 @@ def get_all_posts():
             post.category = category.__dict__
             post.user = user.__dict__
 
+            db_cursor.execute("""
+                SELECT
+                    t.id,
+                    t.label
+                FROM Tags t
+                JOIN PostTags pt on t.id = pt.tag_id
+                JOIN Posts p on p.id = pt.post_id
+                WHERE p.id = ?
+            """,(post.id, ))
+
+            tag_rows = db_cursor.fetchall()
+
+            for tag_row in tag_rows:
+                tag = {
+                    'id': tag_row['id'],
+                    'label': tag_row['label']
+                }
+                post.tags.append(tag)
+
             posts.append(post.__dict__)
 
     return json.dumps(posts)
@@ -152,18 +171,12 @@ def get_post_details(id):
             u.password,
             u.profile_image_url,
             u.created_on,
-            u.active,
-            com.id as comment_id,
-            com.post_id,
-            com.author_id,
-            com.content as comment_content
+            u.active
         FROM posts p 
         JOIN Users u 
             ON u.id = p.user_id
         JOIN Categories c 
             ON c.id = p.category_id
-        JOIN Comments com
-            ON p.id = com.post_id
         WHERE p.id = ?
         """, (id, ))
 
@@ -184,6 +197,24 @@ def get_post_details(id):
         post.category = category.__dict__
         post.user = user.__dict__
 
+        db_cursor.execute("""
+                SELECT
+                    t.id,
+                    t.label
+                FROM Tags t
+                JOIN PostTags pt on t.id = pt.tag_id
+                JOIN Posts p on p.id = pt.post_id
+                WHERE p.id = ?
+            """,(post.id, ))
+
+        tag_rows = db_cursor.fetchall()
+
+        for tag_row in tag_rows:
+            tag = {
+                'id': tag_row['id'],
+                'label': tag_row['label']
+            }
+            post.tags.append(tag)
 
         db_cursor.execute("""
             SELECT
@@ -207,9 +238,8 @@ def get_post_details(id):
                 'content': comment_row['comment_content']
             }
             post.comments.append(comment)
-        
 
-        return json.dumps(post.__dict__)
+    return json.dumps(post.__dict__)
 
 # TODO Join comments on to postsDetail query
         # JOIN Comments com
@@ -240,6 +270,13 @@ def create_post(new_post):
 
         id = db_cursor.lastrowid
         new_post['id'] = id
+
+        for tag in new_post['tags']:
+            db_cursor.execute("""
+            INSERT INTO PostTags
+                (post_id, tag_id)
+            VALUES (?,?)
+            """, (new_post['id'], tag['id']))
 
     return json.dumps(new_post)
 
