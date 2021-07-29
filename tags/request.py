@@ -32,6 +32,28 @@ def get_tags():
             tags.append(tag.__dict__)
 
     return json.dumps(tags)
+
+def update_tag(id, tag_body):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE tags
+            SET
+                label = ?
+        WHERE id = ?
+        """, (tag_body['label'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
     
 def delete_tag(id):
     with sqlite3.connect("./Rare.db") as conn:
