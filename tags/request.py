@@ -32,3 +32,11 @@ def get_tags():
             tags.append(tag.__dict__)
 
     return json.dumps(tags)
+    
+def delete_tag(id):
+    with sqlite3.connect("./Rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE FROM tags
+        WHERE id = ?
+        """, (id, ))
