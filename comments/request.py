@@ -15,8 +15,20 @@ def get_all_comments():
             com.id as comment_id,
             com.post_id,
             com.author_id,
-            com.content as comment_content
+            com.content as comment_content,
+            usr.id,
+            usr.first_name,
+            usr.last_name,
+            usr.email,
+            usr.bio,
+            usr.username,
+            usr.password,
+            usr.profile_image_url,
+            usr.created_on,
+            usr.active
         FROM Comments com
+        JOIN Users usr
+            ON com.author_id = usr.id
         """)
 
         comments = []
@@ -27,6 +39,12 @@ def get_all_comments():
 
             comment = Comment(row['comment_id'], row['post_id'],
                               row['author_id'], row['comment_content'])
+            
+            user = User(row['id'], row['first_name'], row['last_name'],
+                        row['email'], row['bio'],
+                        row['username'], row['password'], row['profile_image_url'], row['created_on'], row['active'],)
+            
+            comment.user = user.__dict__
 
             comments.append(comment.__dict__)
     return json.dumps(comments)
@@ -83,7 +101,12 @@ def get_comments_by_post_id(id):
                         row['title'], row['publication_date'],
                         row['image_url'], row['post_content'], row['approved'],)
 
+            user = User(row['id'], row['first_name'], row['last_name'],
+                        row['email'], row['bio'],
+                        row['username'], row['password'], row['profile_image_url'], row['created_on'], row['active'],)
+
             comment.post = post.__dict__
+            comment.user = user.__dict__
 
             comments.append(comment.__dict__)
     return json.dumps(comments)
